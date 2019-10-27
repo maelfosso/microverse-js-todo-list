@@ -27,6 +27,10 @@ main div#todos {
   margin: 0.5em;
 }
 
+.form-control, .btn, .list-group-item:first-child, .list-group-item:last-child {
+  border-radius: 0;
+}
+
 /*
  * CREATE A TO-DO ITEM
  */
@@ -69,4 +73,20 @@ ul#projects-list li {
   padding-top: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid #edf2f9;
+}
+
+/*
+ * LIST OF TO-DO
+ */
+#todos header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#todos header select.form-control {
+  display: inline;
+  width: auto;
+  vertical-align: sub;
+  height: calc(1.2em + .75rem + 2px)
 }

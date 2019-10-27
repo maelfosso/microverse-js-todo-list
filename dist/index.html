@@ -70,7 +70,18 @@
         </div>
       </aside>
       <div id="todos">
-        ToDos
+        <header>
+          <h3>ToDos</h3>
+          <div class="">
+            <button type="button" class="btn btn-sm" disabled name="delete-selected-todos" id="delete-selected-todos">Delete all (before)</button>
+            <button type="button" class="btn btn-sm btn-danger active" name="delete-selected-todos" id="delete-selected-todos">Delete all (after)</button>
+            <select class="form-control" name="projects-list">
+              <option value="all">All</option>
+              <option value="default">Default</option>
+            </select>
+          </div>
+        </header>
+
       </div>
     </main>
   </div>

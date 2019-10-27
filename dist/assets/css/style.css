@@ -1,0 +1,72 @@
+#content {
+  width: 75%;
+  margin: auto;
+
+}
+
+header h1 {
+  text-align: center;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+main aside {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  flex-grow: 0.25;
+  margin: 0.5em;
+}
+
+main div#todos {
+  flex-grow: 0.75;
+  margin: 0.5em;
+}
+
+/*
+ * CREATE A TO-DO ITEM
+ */
+form#todo-form .row {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 575.98px) {
+
+}
+
+@media (max-width: 767.98px) {
+
+}
+
+@media (max-width: 991.98px) {
+
+}
+
+@media (max-width: 1199.98px) {
+
+}
+
+
+
+/*
+ * LIST OF PROJECTS
+ */
+ul#projects-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul#projects-list li {
+  padding-right: 16px;
+  padding-left: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #edf2f9;
+}

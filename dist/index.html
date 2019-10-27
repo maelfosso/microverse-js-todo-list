@@ -8,12 +8,71 @@
   <meta name="description" content="ToDo List">
   <meta name="author" content="Mael FOSSO">
 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="assets/css/style.css">
+
 </head>
 
 <body>
   <div id="content">
-    
+    <header>
+      <h1>ToDo List</h1>
+    </header>
+    <main>
+      <aside>
+        <div id="todo-form-wrapper">
+          <h3>Create a ToDo</h3>
+          <form id="todo-form">
+            <div class="form-group">
+              <input type="text" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Title">
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" id="description" rows="3"></textarea>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <input type="date" class="form-control" id="date" placeholder="Date">
+              </div>
+              <div>
+                <select name="" id="project" class="form-control">
+                  <option value="0">Select a project</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-check-label" for="exampleCheck1">Priority</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="priority" id="low" value="low">
+                <label class="form-check-label" for="low">Low</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="priority" id="normal" value="normal">
+                <label class="form-check-label" for="inlineRadio2">Normal</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="priority" id="hight" value="option3">
+                <label class="form-check-label" for="priority">Hight</label>
+              </div>
+              <div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div id="projects">
+          <h3>Projects</h3>
+          <ul id="projects-list" class="list-group">
+            <li class="list-group-item active">Default</li>
+            <li class="list-group-item">Mike mariage</li>
+            <li class="list-group-item">Guitou platefome</li>
+            <li class="list-group-item">Vanessa Master II</li>
+          </ul>
+        </div>
+      </aside>
+      <div id="todos">
+        ToDos
+      </div>
+    </main>
   </div>
   <script src="main.js"></script>
 </body>

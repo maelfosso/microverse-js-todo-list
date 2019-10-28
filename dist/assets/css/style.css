@@ -118,6 +118,10 @@ ul#projects-list li {
   /* flex-direction: column; */
 }
 
+.todo .todo-infos {
+  width: 100%;
+}
+
 .todo .header, .todo .footer {
   display: flex;
   justify-content: space-between;

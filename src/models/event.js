@@ -5,11 +5,11 @@ export default class Event {
     this.handlers = [];
   }
 
-  addHandler = (handler) => {
+  addHandler(handler) {
     this.handlers.push(handler);
   }
 
-  removeHandler = (handler) => {
+  removeHandler(handler) {
     for(let i=0; i < this.handlers.length; i++) {
       if (this.handlers[i] == handler) {
         this.handlers.splice(i, 1);
@@ -18,7 +18,9 @@ export default class Event {
     }
   }
 
-  fire = (eventArgs) => {
+  fire(eventArgs) {
+    console.log("Fire ..", this.name, eventArgs, this.handlers);
+
     this.handlers.forEach((handler) => {
       handler(eventArgs);
     });

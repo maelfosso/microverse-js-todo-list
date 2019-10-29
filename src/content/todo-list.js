@@ -20,6 +20,9 @@ const todoList = (() => {
   `;
 
   let todos = [];
+  let projects = [
+    'All'
+  ];
 
 
   const todoCreated = (todo) => {
@@ -27,7 +30,6 @@ const todoList = (() => {
     todos.push(todo);
 
     let todoContent = `
-    <div class="todo">
       <div class="custom-control custom-checkbox">
         <input type="checkbox" class="custom-control-input" id="customCheck1">
         <label class="custom-control-label" for="customCheck1"></label>
@@ -35,7 +37,7 @@ const todoList = (() => {
       <div class="todo-infos">
         <div class="header">
           <h6>${todo.title}</h6>
-          <div class="badge badge-info">Project</div>
+          <div class="badge badge-info">${todo.project}</div>
         </div>
         <div class="body">${todo.description}</div>
         <div class="footer">
@@ -49,20 +51,44 @@ const todoList = (() => {
           </div>
         </div>
       </div>
-    </div>
     `;
-    var node = document.createElement("div");                 // Create a <li> node
-    // var textnode = document.createTextNode(todoContent);
-    // node.appendChild(textnode);
+    var node = document.createElement("div");
+    node.setAttribute('class', 'todo');
     node.innerHTML = todoContent;
 
     document.getElementsByClassName('todo-list')[0].appendChild(node)
+  }
+
+  const projectCreated = (project) => {
+    console.log("projectCreated....", project);
+    projects.push(project);
+
+    updateProjectsListDOM();
+  }
+
+  const setProjectsList = (projectsList) => {
+    projects = JSON.parse(JSON.stringify(projectsList));
+    projects.unshift("All");
+
+    updateProjectsListDOM();
+  }
+
+  const updateProjectsListDOM = () => {
+    let select = document.getElementById('todos')
+          .getElementsByTagName('select')[0];
+    select.options.length = 0;
+    for(let i=0; i<projects.length; i++) {
+      select.options[select.options.length] = new Option(projects[i], projects[i]);
+    }
   }
 
   const load = () => {
     document.getElementById("todos").innerHTML = content;
 
     eventAggregator.subscribe('todo.created', todoCreated);
+
+    eventAggregator.subscribe('project.created', projectCreated);
+    eventAggregator.subscribe('project.list', setProjectsList);
   }
 
   const init = () => {

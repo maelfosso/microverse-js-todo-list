@@ -1,5 +1,6 @@
 import createTodo from './content/create-todo';
 import todoList from './content/todo-list';
+import projectsList from './content/projects-list';
 
 const initialPageLoad = () => {
   let content = `
@@ -21,6 +22,7 @@ const initialPageLoad = () => {
 
   createTodo.init();
   todoList.init();
+  projectsList.init();
 
 }
 

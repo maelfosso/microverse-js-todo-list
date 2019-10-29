@@ -29,7 +29,7 @@ const createTodo = (() => {
       </div>
       <div class="custom-control custom-radio custom-control-inline">
         <input class="custom-control-input" type="radio" name="priority" id="normal" value="normal">
-        <label class="custom-control-label" for="inlineRadio2">Normal</label>
+        <label class="custom-control-label" for="normal">Normal</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
         <input class="custom-control-input" type="radio" name="priority" id="hight" value="hight">
@@ -42,6 +42,7 @@ const createTodo = (() => {
     </div>
   </form>
   `;
+  let projects = [];
 
   const load = () => {
     document.getElementById("todo-form-wrapper").innerHTML = content;
@@ -64,18 +65,44 @@ const createTodo = (() => {
         }
       }
 
+      console.log(payload);
       let todo = new ToDo(
         payload.title,
         payload.description,
         payload.due,
         payload.project,
-        payload.prioriy
+        payload.priority
       );
 
       this.reset();
       console.log(todo);
       eventAggregator.publish('todo.created', todo);
     });
+
+    eventAggregator.subscribe('project.created', projectCreated);
+    eventAggregator.subscribe('project.list', setProjectsList);
+  }
+
+  const projectCreated = (project) => {
+    console.log("projectCreated....", project);
+    projects.push(project);
+
+    updateProjectsListDOM();
+  }
+
+  const setProjectsList = (projectsList) => {
+    projects = JSON.parse(JSON.stringify(projectsList));
+
+    updateProjectsListDOM();
+  }
+
+  const updateProjectsListDOM = () => {
+    let select = document.getElementById('todo-form-wrapper')
+          .getElementsByTagName('select')[0];
+    select.options.length = 0;
+    for(let i=0; i<projects.length; i++) {
+      select.options[select.options.length] = new Option(projects[i], projects[i]);
+    }
   }
 
   const init = () => {

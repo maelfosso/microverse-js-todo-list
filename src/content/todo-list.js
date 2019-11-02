@@ -14,7 +14,7 @@ const todoList = (() => {
       </select>
     </div>
   </header>
-  <div class="todo-list">
+  <div id="todo-list">
 
   </div>
   `;
@@ -46,17 +46,19 @@ const todoList = (() => {
             <div class="badge badge-success">${todo.priority}</div>
           </div>
           <div class="actions">
-            <button type="button" name="todo-delete" data-todo-id=${todos.length - 1} class="btn btn-sm btn-danger">Delete</button>
-            <button type="button" name="todo-edit" data-todo-id=${todos.length - 1} class="btn btn-sm btn-warning">Edit</button>
+            <button type="button" id="todo-delete-${todos.length - 1}" data-todo-idx=${todos.length - 1} class="btn btn-sm btn-danger">Delete</button>
+
           </div>
         </div>
       </div>
     `;
     var node = document.createElement("div");
     node.setAttribute('class', 'todo');
+    node.setAttribute('id', `todo-${todos.length - 1}`);
     node.innerHTML = todoContent;
 
-    document.getElementsByClassName('todo-list')[0].appendChild(node)
+    // document.getElementsByClassName('todo-list')[0].appendChild(node)
+    document.getElementById('todo-list').appendChild(node)
   }
 
   const projectCreated = (project) => {
@@ -78,8 +80,31 @@ const todoList = (() => {
           .getElementsByTagName('select')[0];
     select.options.length = 0;
     for(let i=0; i<projects.length; i++) {
-      select.options[select.options.length] = new Option(projects[i], projects[i]);
+      select.options[select.options.length] =
+              new Option(projects[i], projects[i]);
     }
+  }
+
+  const listener = () => {
+    document.querySelector('#todos').addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log(e)
+
+
+      if (e.target && e.target.id.startsWith("todo-delete")) {
+        console.log(e.target);
+
+        let todoIdx = e.target.dataset.todoIdx;
+        console.log(todoIdx);
+        todos.splice(todoIdx, 1);
+
+        console.log(todos);
+
+        var top = document.getElementById("todo-list");
+        var child = document.getElementById("todo-" + todoIdx);
+        top.removeChild(child);
+      }
+    })
   }
 
   const load = () => {
@@ -93,6 +118,7 @@ const todoList = (() => {
 
   const init = () => {
     load();
+    listener();
   }
 
   return {

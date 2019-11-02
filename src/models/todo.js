@@ -5,5 +5,6 @@ export default class ToDo {
     this.due = due;
     this.project = project;
     this.priority = priority;
+    this.status = 'progress';
   }
 }

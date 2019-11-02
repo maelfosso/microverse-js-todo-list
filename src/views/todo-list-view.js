@@ -1,13 +1,13 @@
 import ToDo from '../models/todo';
 import eventAggregator from '../modules/event-aggregator';
 
-const todoList = (() => {
+const todoListView = (() => {
   let content = `
   <section>
     <header>
       <h3>ToDos</h3>
       <div class="">
-        <select class="custom-select custom-select-sm" name="projects-list">
+        <select class="custom-select custom-select-sm" id="projects-list">
           <option value="all">All</option>
           <option value="default">Default</option>
         </select>
@@ -32,10 +32,7 @@ const todoList = (() => {
     'All'
   ];
 
-
-  const todoCreated = (todo) => {
-    todos.push(todo);
-
+  const getTodoContent = (todo) => {
     let todoContent = `
       <div class="custom-control custom-checkbox">
         <input type="checkbox" class="custom-control-input" id="customCheck1">
@@ -51,25 +48,41 @@ const todoList = (() => {
           <div class="infos">
             <div class="badge badge-secondary">${todo.due}</div>
             <div class="badge badge-success">${todo.priority}</div>
-            <button type="button" id="todo-done-${todos.length - 1}" data-todo-idx=${todos.length - 1} class="btn btn-success">Delete</button>
+            <button type="button" id="todo-done-${todo.id}" data-todo-idx=${todo.id} class="btn btn-success">DONE</button>
           </div>
           <div class="actions">
-            <button type="button" id="todo-delete-${todos.length - 1}" data-todo-idx=${todos.length - 1} class="btn btn-sm btn-danger">Delete</button>
+            <button type="button" id="todo-delete-${todo.id}" data-todo-idx=${todo.id} class="btn btn-sm btn-danger">Delete</button>
 
           </div>
         </div>
       </div>
     `;
+
+    return todoContent;
+  }
+
+
+  const todoAdded = (todo) => {
+
+    let todoContent = getTodoContent(todo);
+
     var node = document.createElement("div");
     node.setAttribute('class', 'todo');
-    node.setAttribute('id', `todo-${todos.length - 1}`);
+    node.setAttribute('id', `todo-${todo.id}`);
     node.innerHTML = todoContent;
 
     document.getElementById('todo-list').appendChild(node)
   }
 
+  const todoRemoved = (id) => {
+    var top = document.getElementById("todo-list");
+    var child = document.getElementById("todo-" + id);
+    top.removeChild(child);
+  }
+
   const todoDone = (todo) => {
-    let todoContent = `
+    // ADD it in the Todo Done List
+    let todoDoneContent = `
       <div class="todo-infos">
         <div class="header">
           <h6>${todo.title}</h6>
@@ -86,14 +99,25 @@ const todoList = (() => {
     `;
     var node = document.createElement("div");
     node.setAttribute('class', 'todo done');
-    // node.setAttribute('id', `todo-${todos.length - 1}`);
-    node.innerHTML = todoContent;
+    node.innerHTML = todoDoneContent;
+    document.getElementById('todos-done').appendChild(node);
 
-    document.getElementById('todos-done').appendChild(node)
+    // Remove it from Todo List
+    var top = document.getElementById("todo-list");
+    var child = document.getElementById("todo-" + todo.id);
+    top.removeChild(child);
+  }
+
+  const todoList = (todos) => {
+    var node = document.getElementById("todo-list");
+    while (node.firstChild) node.removeChild(node.firstChild);
+
+    for (let i=0; i<todos.length; i++) {
+      todoAdded(todos[i]);
+    }
   }
 
   const projectCreated = (project) => {
-    console.log("projectCreated....", project);
     projects.push(project);
 
     updateProjectsListDOM();
@@ -119,45 +143,35 @@ const todoList = (() => {
   const listener = () => {
     document.querySelector('#todos').addEventListener('click', function(e) {
       e.preventDefault();
-      console.log(e)
-
 
       if (e.target && e.target.id.startsWith("todo-delete")) {
-        console.log(e.target);
-
         let todoIdx = e.target.dataset.todoIdx;
-        console.log(todoIdx);
-        todos.splice(todoIdx, 1);
-
-        console.log(todos);
-
-        var top = document.getElementById("todo-list");
-        var child = document.getElementById("todo-" + todoIdx);
-        top.removeChild(child);
+        eventAggregator.publish("todo.deleted", todoIdx);
       }
+
       if (e.target && e.target.id.startsWith("todo-done")) {
-        console.log(e.target);
-
         let todoIdx = e.target.dataset.todoIdx;
-        todos[todoIdx].status = 'done';
-        let todo = JSON.parse(JSON.stringify(todos[todoIdx]));
-        todos.splice(todoIdx, 1);
-
-        console.log(todos);
-
-        var top = document.getElementById("todo-list");
-        var child = document.getElementById("todo-" + todoIdx);
-        top.removeChild(child);
-
-        todoDone(todo);
+        eventAggregator.publish("todo.status", todoIdx);
       }
-    })
+    });
+
+    document.querySelector('#todos').addEventListener('input', function(e) {
+      e.preventDefault();
+
+      if (e.target.id !== 'projects-list') return;
+
+      eventAggregator.publish("todos.filter", e.target.value);
+
+    });
   }
 
   const load = () => {
     document.getElementById("todos").innerHTML = content;
 
-    eventAggregator.subscribe('todo.created', todoCreated);
+    eventAggregator.subscribe('todo.added', todoAdded);
+    eventAggregator.subscribe('todo.removed', todoRemoved);
+    eventAggregator.subscribe('todo.done', todoDone);
+    eventAggregator.subscribe("todos.filtered", todoList);
 
     eventAggregator.subscribe('project.created', projectCreated);
     eventAggregator.subscribe('project.list', setProjectsList);
@@ -173,4 +187,4 @@ const todoList = (() => {
   };
 })();
 
-export default todoList;
+export default todoListView;

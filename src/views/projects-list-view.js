@@ -1,6 +1,6 @@
 import eventAggregator from '../modules/event-aggregator';
 
-const projectList = (() => {
+const projectListView = (() => {
   let content = `
   <h3>Projects</h3>
   <ul id="projects-list" class="list-group"></ul>
@@ -82,4 +82,4 @@ const projectList = (() => {
   };
 })();
 
-export default projectList;
+export default projectListView;

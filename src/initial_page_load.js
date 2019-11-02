@@ -1,4 +1,5 @@
 import todoListData from './data/todo-list-data';
+import projectListData from './data/project-list-data';
 
 import createTodoView from './views/create-todo-view';
 import todoListView from './views/todo-list-view';
@@ -22,11 +23,12 @@ const initialPageLoad = () => {
   `;
   document.getElementById('content').innerHTML = view;
 
-  todoListData.init();
-
   createTodoView.init();
   todoListView.init();
   projectsListView.init();
+
+  todoListData.init();
+  projectListData.init();
 
 }
 

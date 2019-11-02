@@ -53,7 +53,6 @@ const createTodoView = (() => {
       e.preventDefault();
 
       let elements = this.elements;
-      console.log(elements);
 
       let payload = {};
       for(let i=0; i < elements.length; i++) {
@@ -77,12 +76,11 @@ const createTodoView = (() => {
       eventAggregator.publish('todo.created', todo);
     });
 
-    eventAggregator.subscribe('project.created', projectCreated);
+    eventAggregator.subscribe('project.added', projectAdded);
     eventAggregator.subscribe('project.list', setProjectsList);
   }
 
-  const projectCreated = (project) => {
-    console.log("projectCreated....", project);
+  const projectAdded = (project) => {
     projects.push(project);
 
     updateProjectsListDOM();

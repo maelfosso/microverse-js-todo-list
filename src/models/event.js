@@ -19,8 +19,6 @@ export default class Event {
   }
 
   fire(eventArgs) {
-    console.log("Fire ..", this.name, eventArgs, this.handlers);
-
     this.handlers.forEach((handler) => {
       handler(eventArgs);
     });

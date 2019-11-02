@@ -34,10 +34,6 @@ const todoListView = (() => {
 
   const getTodoContent = (todo) => {
     let todoContent = `
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="customCheck1">
-        <label class="custom-control-label" for="customCheck1"></label>
-      </div>
       <div class="todo-infos">
         <div class="header">
           <h6>${todo.title}</h6>

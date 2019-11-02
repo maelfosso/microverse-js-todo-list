@@ -1,7 +1,7 @@
 import ToDo from '../models/todo';
 import eventAggregator from '../modules/event-aggregator';
 
-const createTodo = (() => {
+const createTodoView = (() => {
   let content = `
   <h3>Create a ToDo</h3>
   <form id="todo-form" method="post">
@@ -53,7 +53,6 @@ const createTodo = (() => {
       e.preventDefault();
 
       let elements = this.elements;
-      console.log(elements);
 
       let payload = {};
       for(let i=0; i < elements.length; i++) {
@@ -65,7 +64,6 @@ const createTodo = (() => {
         }
       }
 
-      console.log(payload);
       let todo = new ToDo(
         payload.title,
         payload.description,
@@ -75,16 +73,14 @@ const createTodo = (() => {
       );
 
       this.reset();
-      console.log(todo);
       eventAggregator.publish('todo.created', todo);
     });
 
-    eventAggregator.subscribe('project.created', projectCreated);
+    eventAggregator.subscribe('project.added', projectAdded);
     eventAggregator.subscribe('project.list', setProjectsList);
   }
 
-  const projectCreated = (project) => {
-    console.log("projectCreated....", project);
+  const projectAdded = (project) => {
     projects.push(project);
 
     updateProjectsListDOM();
@@ -115,4 +111,4 @@ const createTodo = (() => {
   };
 })();
 
-export default createTodo;
+export default createTodoView;

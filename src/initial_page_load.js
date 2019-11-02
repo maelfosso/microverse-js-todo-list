@@ -1,9 +1,12 @@
-import createTodo from './content/create-todo';
-import todoList from './content/todo-list';
-import projectsList from './content/projects-list';
+import todoListData from './data/todo-list-data';
+import projectListData from './data/project-list-data';
+
+import createTodoView from './views/create-todo-view';
+import todoListView from './views/todo-list-view';
+import projectsListView from './views/projects-list-view';
 
 const initialPageLoad = () => {
-  let content = `
+  let view = `
   <header>
     <h1>ToDo List</h1>
   </header>
@@ -18,11 +21,14 @@ const initialPageLoad = () => {
     </div>
   </main>
   `;
-  document.getElementById('content').innerHTML = content;
+  document.getElementById('content').innerHTML = view;
 
-  createTodo.init();
-  todoList.init();
-  projectsList.init();
+  createTodoView.init();
+  todoListView.init();
+  projectsListView.init();
+
+  todoListData.init();
+  projectListData.init();
 
 }
 

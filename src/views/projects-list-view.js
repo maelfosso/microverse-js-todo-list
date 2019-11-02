@@ -1,6 +1,6 @@
 import eventAggregator from '../modules/event-aggregator';
 
-const projectList = (() => {
+const projectListView = (() => {
   let content = `
   <h3>Projects</h3>
   <ul id="projects-list" class="list-group"></ul>
@@ -16,14 +16,7 @@ const projectList = (() => {
   </form>
   `;
 
-  let projects = [
-    "Default"
-  ];
-
-  const projectCreated = (project) => {
-    console.log("projectCreated...", project);
-    projects.push(project);
-
+  const projectAdded = (project) => {
     var node = document.createElement("li");
     node.setAttribute('class', 'list-group-item')
     node.innerHTML = project;
@@ -33,7 +26,9 @@ const projectList = (() => {
 
   const load = () => {
     document.getElementById("projects").innerHTML = content;
+  }
 
+  const list = (projects) => {
     for(let i=0; i < projects.length; i++) {
       var node = document.createElement("li");
       node.setAttribute('class', 'list-group-item')
@@ -41,9 +36,6 @@ const projectList = (() => {
 
       document.getElementById('projects-list').appendChild(node)
     }
-
-    eventAggregator.subscribe('project.created', projectCreated);
-    eventAggregator.publish('project.list', projects);
   }
 
   const listener = () => {
@@ -51,7 +43,6 @@ const projectList = (() => {
       e.preventDefault();
 
       let elements = this.elements;
-      console.log(elements);
 
       let payload = {};
       for(let i=0; i < elements.length; i++) {
@@ -63,13 +54,14 @@ const projectList = (() => {
         }
       }
 
-      console.log(payload);
-
       let project = payload.name;
 
       this.reset();
       eventAggregator.publish('project.created', project);
     });
+
+    eventAggregator.subscribe('project.added', projectAdded);
+    eventAggregator.subscribe('project.list', list);
   }
 
   const init = () => {
@@ -82,4 +74,4 @@ const projectList = (() => {
   };
 })();
 
-export default projectList;
+export default projectListView;

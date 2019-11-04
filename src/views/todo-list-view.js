@@ -179,8 +179,9 @@ const todoListView = (() => {
     eventAggregator.subscribe('todo.added', todoAdded);
     eventAggregator.subscribe('todo.removed', todoRemoved);
     eventAggregator.subscribe('todo.done', todoDone);
-    eventAggregator.subscribe("todos.filtered", todoList);
     eventAggregator.subscribe("todo.edit.update", todoUpdate);
+    eventAggregator.subscribe("todos.filtered", todoList);
+    eventAggregator.subscribe("todos.list", todoList);
 
     eventAggregator.subscribe('project.created', projectCreated);
     eventAggregator.subscribe('project.list', setProjectsList);

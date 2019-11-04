@@ -48,7 +48,7 @@ const todoListView = (() => {
           </div>
           <div class="actions">
             <button type="button" id="todo-delete-${todo.id}" data-todo-idx=${todo.id} class="btn btn-sm btn-danger">Delete</button>
-
+            <button type="button" id="todo-edit-${todo.id}" data-todo-idx=${todo.id} class="btn btn-sm btn-warning">Edit</button>
           </div>
         </div>
       </div>
@@ -136,6 +136,13 @@ const todoListView = (() => {
     }
   }
 
+  const todoUpdate = (todo) => {
+    let todoContent = getTodoContent(todo);
+
+    document.getElementById(`todo-${todo.id}`).innerHTML = todoContent;
+  }
+
+
   const listener = () => {
     document.querySelector('#todos').addEventListener('click', function(e) {
       e.preventDefault();
@@ -148,6 +155,11 @@ const todoListView = (() => {
       if (e.target && e.target.id.startsWith("todo-done")) {
         let todoIdx = e.target.dataset.todoIdx;
         eventAggregator.publish("todo.status", todoIdx);
+      }
+
+      if (e.target && e.target.id.startsWith("todo-edit")) {
+        let todoIdx = e.target.dataset.todoIdx;
+        eventAggregator.publish("todo.edit.start", todoIdx);
       }
     });
 
@@ -168,6 +180,7 @@ const todoListView = (() => {
     eventAggregator.subscribe('todo.removed', todoRemoved);
     eventAggregator.subscribe('todo.done', todoDone);
     eventAggregator.subscribe("todos.filtered", todoList);
+    eventAggregator.subscribe("todo.edit.update", todoUpdate);
 
     eventAggregator.subscribe('project.created', projectCreated);
     eventAggregator.subscribe('project.list', setProjectsList);

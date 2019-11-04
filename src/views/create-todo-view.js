@@ -39,6 +39,7 @@ const createTodoView = (() => {
 
     <div>
         <button type="submit" name="submit" class="btn btn-sm btn-primary">Submit</button>
+        <button type="button" name="cancel" id="cancel" class="btn btn-sm btn-danger d-none" onClick="cancel">Cancel</button>
     </div>
   </form>
   `;
@@ -49,6 +50,12 @@ const createTodoView = (() => {
   }
 
   const listener = () => {
+    document.getElementById("cancel").addEventListener('click', function(e) {
+      document.getElementById("todo-form").reset();
+      document.querySelector("#todo-form button[name='submit']").firstChild.data = "Submit"
+      this.classList.toggle("d-none");
+    });
+
     document.querySelector('form').addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -70,7 +77,7 @@ const createTodoView = (() => {
           payload[nameOfElement] = valueOfElement;
         }
       }
-      console.log(payload);
+      
 
       let todo = new ToDo(
         payload.title,
@@ -79,13 +86,25 @@ const createTodoView = (() => {
         payload.project,
         payload.priority
       );
-      console.log(todo);
+      
       this.reset();
-      eventAggregator.publish('todo.created', todo);
+      
+      let eltSubmit = document.querySelector("#todo-form button[name='submit']");
+      if (eltSubmit.firstChild.data == "Submit") {
+        eventAggregator.publish('todo.created', todo);
+      } else {
+        todo.id = +eltSubmit.dataset.todoIdx;
+        document.getElementById("cancel").classList.toggle("d-none");
+        document.querySelector("#todo-form button[name='submit']").firstChild.data = "Submit";
+        
+        eventAggregator.publish('todo.edit.end', todo);
+      }
+      
     });
 
     eventAggregator.subscribe('project.added', projectAdded);
     eventAggregator.subscribe('project.list', setProjectsList);
+    eventAggregator.subscribe("todo.edit.to", editTodo);
   }
 
   const projectAdded = (project) => {
@@ -98,6 +117,23 @@ const createTodoView = (() => {
     projects = JSON.parse(JSON.stringify(projectsList));
 
     updateProjectsListDOM();
+  }
+
+  const editTodo = (todo) => {
+    let todoForm = document.getElementById("todo-form");
+    todoForm.elements.namedItem("title").value = todo.title;
+    todoForm.elements.namedItem("description").value = todo.description;
+    todoForm.elements.namedItem("due").value = new Date(todo.due).toISOString().split('T')[0];
+    todoForm.elements.namedItem("project").value = todo.project.toString() || todo.project;
+
+    let eltPriority = todoForm.elements.namedItem("priority");
+    for( var j=0; j < eltPriority.length; j++ ) {
+      eltPriority[j].checked = ( todo.priority.indexOf(eltPriority[j].value) > -1 );
+    }
+
+    todoForm.elements.namedItem("submit").firstChild.data = "Save";
+    todoForm.elements.namedItem("submit").dataset.todoIdx = todo.id;
+    todoForm.elements.namedItem("cancel").classList.toggle("d-none");
   }
 
   const updateProjectsListDOM = () => {

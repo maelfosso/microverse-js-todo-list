@@ -24,16 +24,16 @@ const createTodoView = (() => {
     <div class="form-group">
 
       <div class="custom-control custom-radio custom-control-inline">
-        <input class="custom-control-input" type="radio" name="priority" id="low" value="low">
+        <input class="custom-control-input" type="radio" name="priority" id="low" value="Low">
         <label class="custom-control-label" for="low">Low</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
-        <input class="custom-control-input" type="radio" name="priority" id="normal" value="normal">
+        <input class="custom-control-input" type="radio" name="priority" id="normal" value="Normal">
         <label class="custom-control-label" for="normal">Normal</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
-        <input class="custom-control-input" type="radio" name="priority" id="hight" value="hight">
-        <label class="custom-control-label" for="hight">Hight</label>
+        <input class="custom-control-input" type="radio" name="priority" id="high" value="High">
+        <label class="custom-control-label" for="high">High</label>
       </div>
     </div>
 
@@ -56,13 +56,21 @@ const createTodoView = (() => {
 
       let payload = {};
       for(let i=0; i < elements.length; i++) {
-        if (elements[i].type !== 'submit') {
+        if (elements[i].type == 'radio') {
+          if (elements[i].checked) {
+            let nameOfElement = elements[i].name;
+            let valueOfElement = elements[i].value;
+
+            payload[nameOfElement] = valueOfElement;
+          }
+        } else if (elements[i].type !== 'submit') {
           let nameOfElement = elements[i].name;
           let valueOfElement = elements[i].value;
 
           payload[nameOfElement] = valueOfElement;
         }
       }
+      console.log(payload);
 
       let todo = new ToDo(
         payload.title,
@@ -71,7 +79,7 @@ const createTodoView = (() => {
         payload.project,
         payload.priority
       );
-
+      console.log(todo);
       this.reset();
       eventAggregator.publish('todo.created', todo);
     });

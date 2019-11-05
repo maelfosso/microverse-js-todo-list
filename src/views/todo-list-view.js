@@ -34,10 +34,6 @@ const todoListView = (() => {
 
   const getTodoContent = (todo) => {
     let todoContent = `
-      <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" id="customCheck1">
-        <label class="custom-control-label" for="customCheck1"></label>
-      </div>
       <div class="todo-infos">
         <div class="header">
           <h6>${todo.title}</h6>
@@ -52,7 +48,7 @@ const todoListView = (() => {
           </div>
           <div class="actions">
             <button type="button" id="todo-delete-${todo.id}" data-todo-idx=${todo.id} class="btn btn-sm btn-danger">Delete</button>
-
+            <button type="button" id="todo-edit-${todo.id}" data-todo-idx=${todo.id} class="btn btn-sm btn-warning">Edit</button>
           </div>
         </div>
       </div>
@@ -140,6 +136,13 @@ const todoListView = (() => {
     }
   }
 
+  const todoUpdate = (todo) => {
+    let todoContent = getTodoContent(todo);
+
+    document.getElementById(`todo-${todo.id}`).innerHTML = todoContent;
+  }
+
+
   const listener = () => {
     document.querySelector('#todos').addEventListener('click', function(e) {
       e.preventDefault();
@@ -152,6 +155,11 @@ const todoListView = (() => {
       if (e.target && e.target.id.startsWith("todo-done")) {
         let todoIdx = e.target.dataset.todoIdx;
         eventAggregator.publish("todo.status", todoIdx);
+      }
+
+      if (e.target && e.target.id.startsWith("todo-edit")) {
+        let todoIdx = e.target.dataset.todoIdx;
+        eventAggregator.publish("todo.edit.start", todoIdx);
       }
     });
 
@@ -171,7 +179,9 @@ const todoListView = (() => {
     eventAggregator.subscribe('todo.added', todoAdded);
     eventAggregator.subscribe('todo.removed', todoRemoved);
     eventAggregator.subscribe('todo.done', todoDone);
+    eventAggregator.subscribe("todo.edit.update", todoUpdate);
     eventAggregator.subscribe("todos.filtered", todoList);
+    eventAggregator.subscribe("todos.list", todoList);
 
     eventAggregator.subscribe('project.created', projectCreated);
     eventAggregator.subscribe('project.list', setProjectsList);
